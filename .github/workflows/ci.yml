@@ -1,0 +1,59 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run the tests
+        run: echo "Running the tests ..."
+
+
+  build:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+      max-parallel: 3
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Make bin
+        run: |
+          mkdir -p dist/${{ matrix.os }}
+          cp -f pretend_binary.bin dist/${{ matrix.os }}
+
+
+  artifacts:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+      max-parallel: 3
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Artifact windows
+        uses: actions/upload-artifact@v2
+        if: startsWith(matrix.os, 'windows')
+        with:
+          name: ${{ matrix.os }}
+          path: dist/${{ matrix.os }}/pretend_binary.bin
+
+      - name: Artifact mac
+        uses: actions/upload-artifact@v2
+        if: startsWith(matrix.os, 'macos')
+        with:
+          name: ${{ matrix.os }}
+          path: dist/${{ matrix.os }}/pretend_binary.bin
+
+      - name: Artifact linux
+        uses: actions/upload-artifact@v2
+        if: startsWith(matrix.os, 'ubuntu')
+        with:
+          name: ${{ matrix.os }}
+          path: dist/${{ matrix.os }}/pretend_binary.bin
+
