@@ -23,6 +23,7 @@ jobs:
     steps:
       - name: Make bin
         run: |
+          ls -AlFh
           mkdir -p dist/${{ matrix.os }}
           cp pretend_binary.bin dist/${{ matrix.os }}
 
