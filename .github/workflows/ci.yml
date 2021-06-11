@@ -21,11 +21,28 @@ jobs:
       max-parallel: 3
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Make bin
-        run: |
-          ls -AlFh
-          mkdir -p dist/${{ matrix.os }}
-          cp pretend_binary.bin dist/${{ matrix.os }}
+
+      - name: Make dir
+        run: mkdir -p dist/${{ matrix.os }}
+
+      - name: Show dir win
+        if: startsWith(matrix.os, 'windows')
+        run: ls
+
+      - name: Show dir mac
+        if: startsWith(matrix.os, 'macos')
+        run: ls -AlFh
+
+      - name: Show dir linux
+        if: startsWith(matrix.os, 'ubuntu')
+        run: ls -AlFh
+
+      - name: Copy bin
+        run: cp pretend_binary.bin dist/${{ matrix.os }}
+
+      - name: Show all linux
+        if: startsWith(matrix.os, 'ubuntu')
+        run: find .
 
 
   artifacts:
