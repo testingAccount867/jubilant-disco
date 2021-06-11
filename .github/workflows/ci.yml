@@ -24,8 +24,7 @@ jobs:
       - name: Make bin
         run: |
           mkdir -p dist/${{ matrix.os }}
-          pwd
-          cp ../pretend_binary.bin dist/${{ matrix.os }}
+          cp pretend_binary.bin dist/${{ matrix.os }}
 
 
   artifacts:
